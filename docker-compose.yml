@@ -1,0 +1,9 @@
+services:
+  audience-bot:
+    build: .
+    image: audience-bot:latest
+    volumes:
+      - ./tests/data:/app/tests/data:ro
+    command: ["--poll-telegram"]
+    env_file:
+      - .env

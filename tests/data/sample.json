@@ -1,0 +1,255 @@
+{
+ "name": "Тима #1 по управлению",
+ "type": "private_supergroup",
+ "id": 2283832941,
+ "messages": [
+  {
+   "id": 781,
+   "type": "service",
+   "date": "2025-12-02T10:59:10",
+   "date_unixtime": "1764662350",
+   "actor": "UserAdmin",
+   "actor_id": "user100001",
+   "action": "invite_members",
+   "members": [
+    "UserOne"
+   ],
+   "text": "",
+   "text_entities": []
+  },
+  {
+   "id": 782,
+   "type": "message",
+   "date": "2025-12-02T10:59:52",
+   "date_unixtime": "1764662392",
+   "edited": "2025-12-02T11:00:37",
+   "edited_unixtime": "1764662437",
+   "from": "UserAdmin",
+   "from_id": "1000",
+   "text": "Алексей, с возвращением! :)",
+   "text_entities": [
+    {
+     "type": "plain",
+     "text": "Алексей, с возвращением! :)"
+    }
+   ],
+   "reactions": [
+     {
+      "type": "emoji",
+      "count": 2,
+      "emoji": "👍",
+      "recent": [
+       {
+        "from": "MemberX",
+        "from_id": "user100004",
+        "date": "2025-12-02T11:08:01"
+       },
+       {
+        "from": "UserOne",
+        "from_id": "user100002",
+        "date": "2025-12-02T11:00:37"
+       }
+      ]
+     }
+    ]
+  },
+  {
+   "id": 783,
+   "type": "message",
+   "date": "2025-12-02T11:00:04",
+   "date_unixtime": "1764662404",
+   "from": "UserOne",
+   "from_id": "1001",
+   "text": "Привет всем! :)",
+   "text_entities": [
+    {
+     "type": "plain",
+     "text": "Привет всем! :)"
+    }
+   ]
+  },
+  {
+   "id": 784,
+   "type": "message",
+   "date": "2025-12-02T11:00:23",
+   "date_unixtime": "1764662423",
+   "edited": "2025-12-02T11:08:03",
+   "edited_unixtime": "1764662883",
+   "from": "UserOne",
+   "from_id": "user100002",
+   "text": "Вот и полгода прошло",
+   "text_entities": [
+    {
+     "type": "plain",
+     "text": "Вот и полгода прошло"
+    }
+   ],
+   "reactions": [
+     {
+      "type": "emoji",
+      "count": 1,
+      "emoji": "❤",
+      "recent": [
+       {
+        "from": "MemberX",
+        "from_id": "user100004",
+        "date": "2025-12-02T11:08:03"
+       }
+      ]
+     }
+    ]
+  },
+  {
+   "id": 785,
+   "type": "service",
+   "date": "2025-12-02T11:07:44",
+   "date_unixtime": "1764662864",
+   "actor": "UserAdmin",
+   "actor_id": "user100001",
+   "action": "invite_members",
+   "members": [
+    "DevLead"
+   ],
+   "text": "",
+   "text_entities": []
+  },
+  {
+   "id": 786,
+   "type": "message",
+   "date": "2025-12-02T11:08:26",
+   "date_unixtime": "1764662906",
+   "from": "UserAdmin",
+   "from_id": "1000",
+   "text": "Владимир, с возвращением! \nВот и вся команда в сборе!",
+   "text_entities": [
+    {
+     "type": "plain",
+     "text": "Владимир, с возвращением! \nВот и вся команда в сборе!"
+    }
+   ]
+  },
+  {
+   "id": 787,
+   "type": "message",
+   "date": "2025-12-02T11:08:27",
+   "date_unixtime": "1764662907",
+   "from": "DevLead",
+   "from_id": "1002",
+   "text": "Всем привет",
+   "text_entities": [
+    {
+     "type": "plain",
+     "text": "Всем привет"
+    }
+   ]
+  },
+  {
+   "id": 788,
+   "type": "message",
+   "date": "2025-12-02T11:08:39",
+   "date_unixtime": "1764662919",
+   "from": "MemberX",
+   "from_id": "1003",
+   "text": "Привет-привет!",
+   "text_entities": [
+    {
+     "type": "plain",
+     "text": "Привет-привет!"
+    }
+   ]
+  },
+  {
+   "id": 789,
+   "type": "message",
+   "date": "2025-12-02T11:14:03",
+   "date_unixtime": "1764663243",
+   "from": "UserOne",
+   "from_id": "1001",
+   "reply_to_message_id": 787,
+   "text": "Привет, Владимир!\nТеперь ты тимлид?",
+   "text_entities": [
+    {
+     "type": "plain",
+     "text": "Привет, Владимир!\nТеперь ты тимлид?"
+    }
+   ]
+  },
+  {
+   "id": 790,
+   "type": "message",
+   "date": "2025-12-02T11:30:24",
+   "date_unixtime": "1764664224",
+   "from": "UserAdmin",
+   "from_id": "1000",
+   "text": "С Тимлидом ещё нужно определиться 🙂",
+   "text_entities": [
+    {
+     "type": "plain",
+     "text": "С Тимлидом ещё нужно определиться 🙂"
+    }
+   ]
+  },
+  {
+   "id": 791,
+   "type": "message",
+   "date": "2025-12-02T11:31:05",
+   "date_unixtime": "1764664265",
+   "from": "UserAdmin",
+   "from_id": "user100001",
+   "text": "Я пока добавил Владимира в последний пустой слот :)",
+   "text_entities": [
+    {
+     "type": "plain",
+     "text": "Я пока добавил Владимира в последний пустой слот :)"
+    }
+   ]
+  },
+  {
+   "id": 792,
+   "type": "message",
+   "date": "2025-12-02T11:42:04",
+   "date_unixtime": "1764664924",
+   "from": "UserOne",
+   "from_id": "user100002",
+   "text": "Язык у нас Java? \nНе увидел в задании явных требований (или плохо смотрел)",
+   "text_entities": [
+    {
+    "type": "plain",
+    "text": "Язык у нас Java? \nНе увидел в задании явных требований (или плохо смотрел)"
+    }
+   ]
+  },
+  {
+   "id": 793,
+   "type": "message",
+   "date": "2025-12-02T11:45:10",
+   "date_unixtime": "1764665110",
+   "from": "MemberA",
+   "from_id": "user100005",
+   "text": "Кидаю свежую версию плана в PDF.",
+   "text_entities": [
+    {
+     "type": "plain",
+     "text": "Кидаю свежую версию плана в PDF."
+    }
+   ],
+   "file": "Project_Plan_v2.pdf",
+   "mime_type": "application/pdf",
+   "file_size": 204800,
+   "reactions": [
+    {
+     "type": "emoji",
+     "count": 1,
+     "emoji": "✅",
+     "recent": [
+      {
+       "from": "MemberB",
+       "from_id": "user100006",
+       "date": "2025-12-02T11:46:00"
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}
