@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from ..usecases.files import TempFileRef
 from ..usecases.ports import ISessionStore
@@ -21,6 +21,7 @@ class SessionRecord:
     user_id: str
     files: List[TempFileRef] = field(default_factory=list)
     state: SessionState = SessionState.EMPTY
+    export_format: Optional[str] = None
     created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
@@ -31,6 +32,7 @@ class SessionRecord:
     def clear(self) -> None:
         self.files.clear()
         self.state = SessionState.EMPTY
+        self.export_format = None
         self.updated_at = datetime.now(timezone.utc)
 
 

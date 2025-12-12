@@ -5,7 +5,7 @@
 ## Что реализовано
 
 * Чистая доменная модель (Parsing / Extraction / Reporting) и связанный Application Layer (`RunFullPipeline`).
-* Инфраструктура: JSON/HTML/ZIP-парсер, текст/Excel-репорт, `TempFileStorage` и `InMemorySessionStore`.
+* Инфраструктура: парсер JSON/HTML, текст/Excel-репорт, `TempFileStorage` и `InMemorySessionStore`.
 * Telegram-ориентированные адаптеры: `ConversationService`, `BotController`, `TelegramAPIAdapter`,
   `ConsoleTelegramAPIAdapter`, `TelegramWebhookAdapter` и long polling (`TelegramPollingService`).
 * CLI с опциями `--simulate-telegram`, `--chat-name`, Dockerfile и тестами (`pytest` + `unittest`), плюс
@@ -73,9 +73,9 @@ python -m audience_bot.cli --poll-telegram
 - `MAX_PROCESSING_SECONDS` — лимит времени обработки пайплайна (по умолчанию 15 c).
 - `LOG_LEVEL` — уровень логов (INFO/DEBUG/ERROR), при использовании базовой конфигурации.
 
-### Форматы экспорта
+### Форматы данных
 
-- JSON/ZIP — предпочтительно: содержат `user_id`/`username`, точнее дедупликация.
+- JSON — предпочтителен: содержит `user_id`/`username`, обеспечивает более точную дедупликацию.
 - HTML — поддерживается, но беднее данными (обычно только отображаемые имена), возможны дубли при идентификации.
 
 ## Тесты
@@ -84,6 +84,14 @@ python -m audience_bot.cli --poll-telegram
 source .venv/bin/activate
 PYTHONPATH=src python -m pytest
 ```
+
+## Отчёты и интерпретация полей
+
+- Excel-отчёт содержит три вкладки: участники, упомянутые, каналы, с фиксированными колонками
+  (дата экспорта, username, отображаемое имя, имя, фамилия, описание, дата регистрации, наличие канала).
+- Колонка «Наличие канала» заполняется значением «да» только для тех профилей, которые в экспорте явно представлены как каналы.
+  Для остальных строк поле остаётся пустым: мобильный экспорт не даёт достоверной информации о наличии/отсутствии канала в их профиле,
+  поэтому мы не утверждаем «нет», если данных просто нет.
 
 ## Логи
 

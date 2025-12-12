@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import logging
+
 from ..application.usecases.dto import ExtractionResultDTO, ReportDTO, ReportMetadataDTO
 from ..application.usecases.ports import IExcelRenderer, IReportBuilder
 from ..domain.reporting import (
@@ -11,6 +13,8 @@ from ..domain.reporting import (
     TextListBuilder,
 )
 
+logger = logging.getLogger(__name__)
+
 
 class ReportingAdapter(IReportBuilder):
     def __init__(self, renderer: IExcelRenderer, report_policy: ReportPolicy | None = None, force_excel: bool = False):
@@ -20,7 +24,7 @@ class ReportingAdapter(IReportBuilder):
         self._force_excel = force_excel
 
     def build(
-        self, extraction: ExtractionResultDTO, metadata: ReportMetadataDTO
+            self, extraction: ExtractionResultDTO, metadata: ReportMetadataDTO
     ) -> ReportDTO:
         metadata_model = ReportMetadata(
             exported_at=metadata.export_time,
@@ -38,9 +42,8 @@ class ReportingAdapter(IReportBuilder):
         excel_model = self._excel_builder.build(extraction.result, metadata_model)
         report_model.set_excel(metadata_model, excel_model)
         report_model.finalize()
-        # логируем выбор формата для отладки
-        import logging
-        logging.getLogger(__name__).info(
+
+        logger.info(
             "report_format_choice",
             extra={"report_format": format_choice.value, "participant_count": metadata_model.participant_count},
         )
