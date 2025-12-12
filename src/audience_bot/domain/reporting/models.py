@@ -128,7 +128,7 @@ class ExcelReportBuilder:
                     "Фамилия": profile.last_name or "",
                     "Описание": profile.description or "",
                     "Дата регистрации": profile.registered_at or "",
-                    "Наличие канала": "да" if profile.has_channel else "нет",
+                    "Наличие канала": "да" if profile.has_channel else "",
                 }
             )
         return rows
