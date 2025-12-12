@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import io
 import logging
+import zipfile
 from typing import List, Optional
 
 from ..config import PipelineConfig
@@ -17,8 +19,8 @@ logger = logging.getLogger(__name__)
 
 
 START_TEXT = (
-    "Этот бот принимает экспорт истории Telegram-чата и собирает список участников.\n"
-    "Отправьте файлы экспорта мобильного клиента (JSON/HTML/ZIP). После загрузки файлов используйте /process."
+    "Этот бот принимает файлы истории Telegram-чата и собирает список участников.\n"
+    "Отправьте файлы истории чата в формате JSON или HTML. После загрузки файлов используйте /process."
 )
 HELP_TEXT = (
     "Команды:\n"
@@ -29,15 +31,19 @@ HELP_TEXT = (
     "Сессия: корзина ваших загрузок до вызова /process или /reset; хранится до {ttl_min} минут.\n"
     "Лимиты на одну сессию: до {max_files} файлов, каждый ≤ {max_mb} МБ. "
     "Формат отчёта: текст, если участников ≤ {plain_threshold}; иначе Excel."
-    "\nФорматы экспорта: JSON/ZIP — предпочтительны (есть user_id, точная дедупликация). "
+    "\nФормат данных: JSON — предпочтителен (есть user_id, точная дедупликация). "
     "HTML — поддерживается, но беден данными (только отображаемые имена), возможны дубли. "
-    "Рекомендуем присылать JSON/ZIP."
+    "Рекомендуем присылать JSON и не смешивать форматы данных в одной сессии (не загружайте одновременно JSON и HTML одного и того же чата)."
 )
-RESET_TEXT = "Сессия очищена, можете загрузить новый экспорт."
-NO_FILES_TEXT = "Файлы не загружены. Отправьте экспорт, прежде чем вызывать /process."
-PROCESSING_ERROR_TEXT = "Не удалось выполнить обработку экспорта. Попробуй позже."
+RESET_TEXT = "Сессия очищена, можете загрузить новые файлы истории чата."
+NO_FILES_TEXT = "Файлы истории чата не загружены. Отправьте данные, прежде чем вызывать /process."
+PROCESSING_ERROR_TEXT = "Не удалось обработать файлы истории чата. Попробуй позже."
 SESSION_LIMIT_TEXT = "Достигнут лимит файлов. Удали старые и попробуй снова."
 SIZE_LIMIT_TEXT = "Файл превышает максимальный допустимый размер."
+MIXED_FORMAT_TEXT = (
+    "В одной сессии нельзя смешивать разные форматы данных (JSON и HTML). "
+    "Заверши обработку /process или сбрось сессию /reset, затем загружай файлы одного формата данных."
+)
 
 
 @dataclass
@@ -98,8 +104,32 @@ class ConversationService:
                 extra={"user_id": user_id, "reason": "file_size", "size": len(raw_file.content)},
             )
             return BotResponse(text=SIZE_LIMIT_TEXT, is_error=True)
+        # Проверяем, что в одной сессии не смешиваются форматы данных (JSON vs HTML).
+        detected_format = self._detect_export_format(raw_file.content)
+        if detected_format is None:
+            logger.info(
+                "upload_rejected_format",
+                extra={"user_id": user_id, "reason": "unknown_format", "file_name": raw_file.filename},
+            )
+            return BotResponse(
+                text="Формат файла не похож на файл истории Telegram-чата (JSON/HTML). Проверьте данные и попробуйте снова.",
+                is_error=True,
+            )
+        if record.export_format and record.export_format != detected_format:
+            logger.info(
+                "upload_rejected_format_mixed",
+                extra={
+                    "user_id": user_id,
+                    "expected_format": record.export_format,
+                    "got_format": detected_format,
+                    "file_name": raw_file.filename,
+                },
+            )
+            return BotResponse(text=MIXED_FORMAT_TEXT, is_error=True)
+
         temp_ref = self._storage.save(raw_file.filename, raw_file.content, raw_file.mime_type)
         record.add_file(temp_ref)
+        record.export_format = record.export_format or detected_format
         record.state = SessionState.COLLECTING
         self._sessions.save(record)
         logger.info(
@@ -159,3 +189,29 @@ class ConversationService:
         record.clear()
         record.state = SessionState.EMPTY
         self._sessions.save(record)
+
+    @staticmethod
+    def _detect_export_format(content: bytes) -> Optional[str]:
+        """Грубое определение формата данных по содержимому файла.
+
+        Используется только для UX-ограничения: не смешивать HTML и JSON в одной сессии.
+        Возвращает один из логических классов формата:
+        - \"structured\" — JSON или ZIP с экспортом внутри;
+        - \"html\" — HTML-экспорт;
+        - None — не похоже на поддерживаемый экспорт.
+        """
+        if not content:
+            return None
+        # ZIP-проверка должна идти первой, иначе бинарный поток может не декодироваться.
+        if zipfile.is_zipfile(io.BytesIO(content)):
+            return "structured"
+        # Остальные варианты считаем текстовыми.
+        try:
+            text = content.decode("utf-8", errors="ignore").lstrip()
+        except Exception:
+            return None
+        if text.startswith("{"):
+            return "structured"
+        if text.startswith("<"):
+            return "html"
+        return None

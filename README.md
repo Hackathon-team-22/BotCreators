@@ -5,7 +5,7 @@
 ## Что реализовано
 
 * Чистая доменная модель (Parsing / Extraction / Reporting) и связанный Application Layer (`RunFullPipeline`).
-* Инфраструктура: JSON/HTML/ZIP-парсер, текст/Excel-репорт, `TempFileStorage` и `InMemorySessionStore`.
+* Инфраструктура: парсер JSON/HTML, текст/Excel-репорт, `TempFileStorage` и `InMemorySessionStore`.
 * Telegram-ориентированные адаптеры: `ConversationService`, `BotController`, `TelegramAPIAdapter`,
   `ConsoleTelegramAPIAdapter`, `TelegramWebhookAdapter` и long polling (`TelegramPollingService`).
 * CLI с опциями `--simulate-telegram`, `--chat-name`, Dockerfile и тестами (`pytest` + `unittest`), плюс
@@ -73,9 +73,9 @@ python -m audience_bot.cli --poll-telegram
 - `MAX_PROCESSING_SECONDS` — лимит времени обработки пайплайна (по умолчанию 15 c).
 - `LOG_LEVEL` — уровень логов (INFO/DEBUG/ERROR), при использовании базовой конфигурации.
 
-### Форматы экспорта
+### Форматы данных
 
-- JSON/ZIP — предпочтительно: содержат `user_id`/`username`, точнее дедупликация.
+- JSON — предпочтителен: содержит `user_id`/`username`, обеспечивает более точную дедупликацию.
 - HTML — поддерживается, но беднее данными (обычно только отображаемые имена), возможны дубли при идентификации.
 
 ## Тесты

@@ -51,8 +51,8 @@ def main() -> None:
             stream=sys.stdout,
         )
 
-    parser = argparse.ArgumentParser(description="Запустить аудиторию Telegram-чата по экспорту.")
-    parser.add_argument("paths", nargs="*", type=pathlib.Path, help="Файлы экспорта (JSON/HTML/ZIP).")
+    parser = argparse.ArgumentParser(description="Построить аудиторию Telegram-чата по файлам истории.")
+    parser.add_argument("paths", nargs="*", type=pathlib.Path, help="Файлы истории чата (JSON или HTML).")
     parser.add_argument("--chat-name", default=None, help="Название чата для отчёта.")
     parser.add_argument("--simulate-telegram", action="store_true", help="Сымитировать серию Telegram-команд.")
     parser.add_argument("--poll-telegram", action="store_true", help="Запустить long polling Telegram API.")
@@ -75,7 +75,7 @@ def main() -> None:
         return
 
     if not args.paths:
-        parser.error("Укажи хотя бы один файл экспорта.")
+        parser.error("Укажи хотя бы один файл истории чата (JSON или HTML).")
 
     files = [load_raw_file(path) for path in args.paths]
     pipeline = container.pipeline()
