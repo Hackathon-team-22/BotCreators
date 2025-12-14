@@ -92,6 +92,7 @@ class TextListBuilder:
 class ExcelReportBuilder:
     COLUMN_HEADERS = [
         "Дата экспорта",
+        "user_id",
         "Username",
         "Отображаемое имя",
         "Имя",
@@ -122,6 +123,7 @@ class ExcelReportBuilder:
             rows.append(
                 {
                     "Дата экспорта": metadata.exported_at.strftime("%Y-%m-%d %H:%M:%S"),
+                    "user_id": str(profile.profile_id.user_id) if profile.profile_id.user_id is not None else "",
                     "Username": profile.username or "",
                     "Отображаемое имя": profile.display_name or "",
                     "Имя": profile.first_name or "",

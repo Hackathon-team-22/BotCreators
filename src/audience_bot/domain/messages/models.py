@@ -66,12 +66,21 @@ class ChatMessage:
     @classmethod
     def _build_mentions(cls, data: dict[str, Any]) -> List[RawUserRef]:
         mentions: List[RawUserRef] = []
-        for entry in data.get("mentions") or []:
+        raw_mentions: List[Any] = list(data.get("mentions") or [])
+        # В некоторых JSON-экспортах Telegram упоминания приходят только в text_entities.
+        if not raw_mentions and isinstance(data.get("text_entities"), list):
+            for entity in data["text_entities"]:
+                if isinstance(entity, dict) and entity.get("type") == "mention":
+                    raw_mentions.append(entity.get("text"))
+
+        for entry in raw_mentions:
             ref = None
             if isinstance(entry, dict):
                 ref = cls._build_raw_user_ref(entry)
             elif isinstance(entry, str):
-                ref = cls._build_raw_user_ref({}, entry)
+                # Строковое упоминание (например, "@username") — считаем, что это username.
+                payload: dict[str, Any] = {"username": entry}
+                ref = cls._build_raw_user_ref(payload, entry)
             if ref:
                 mentions.append(ref)
         return mentions
@@ -101,7 +110,9 @@ class ChatMessage:
             return None
         first_name = payload.get("first_name")
         last_name = payload.get("last_name")
-        if not (first_name or last_name) and fallback_name:
+        # Если у нас нет явных first_name/last_name и fallback_name не выглядит как username,
+        # пробуем аккуратно разделить его на имя и фамилию.
+        if not (first_name or last_name) and fallback_name and not str(fallback_name).lstrip().startswith("@"):
             first_name, last_name = _split_full_name(fallback_name)
         display_name = payload.get("display_name") or fallback_name or first_name or last_name or payload.get("username")
         if not display_name:
